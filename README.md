@@ -10,13 +10,16 @@ $$\sum_{k=1}^{6} \binom{L}{k} \cdot 19^k$$
 
 where $L = 238$ for avGFP, yielding approximately $10^{13}$ possible variants. Our methodology theorethically navigates efficiently this vast space by learning from limited experimental data and exploiting structural and evolutionary patterns encoded in protein language models.
 
-**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
-**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+In addition to the task of fluorescence, the task was to maintain sufficient thermal stability of the protein when mutations were introduced into it. 
+Thermostability of protein molecules characterizes their ability to preserve their native spatial structure and biological activity when exposed to elevated temperatures. 
 
-**ЗДЕСЬ ДОЛЖЕН БЫТЬ АБЗАЦ ПРО ТЕРМОСТАБИЛЬНОСТЬ**
+From the biochemical point of view, this property is due to the stability of secondary, tertiary and quaternary structures to thermal denaturation, which is accompanied by the destruction of noncovalent interactions. These include hydrogen bonds, ionic and hydrophobic interactions, and vanderwaals forces. The amino acid composition plays a special role: the increased content of hydrophobic residues in the protein core, the presence of disulfide bridges and salt bridges (ion pairs) between charged amino acid residues contributes to an increase in the activation energy of the denaturation process.
 
-**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
-**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+From a biophysical position, thermostability is determined by the free energy of stabilization of the native conformation (ΔG), which is described by the equation:
+
+$$\Delta G = \Delta H - T \Delta S$$
+
+where ΔH is the enthalpy change, T is the absolute temperature, and ΔS is the entropy change of the system. Thermostable proteins have higher ΔG values than their mesophilic counterparts, reflecting their increased resistance to unfolding. The key factors affecting ΔG are the packing density of the hydrophobic core, which reduces the entropic contribution of the unfolded state (ΔS), and the enhancement of enthalpic interactions (ΔH), such as the formation of additional hydrogen bonds and ion pairs.
 
 For reproducibility, Conda package manager was utiziled. We strongly recommend to use it for evaluating purposes:
 
@@ -293,7 +296,12 @@ optimizer.export_top_variants(
 
 ### Implementation
 
-...
+To predict the thermostability of GFP mutants, we used temBERTure, a framework based on the ProteinBERT transformer architecture that includes several specialized models. Our work utilized TemBERTureTm, a sequence-based regression model designed to predict the protein melting temperature (Tm) directly from its amino acid sequence. This model has the same underlying architecture configuration and tokenization as TemBERTureCLS, with a regression head. 
+
+The main mechanism of temBERTure operation is based on the context coding of the amino acid sequence provided by the self-attention mechanism within the framework of the transformer architecture, which allows analyzing not only individual mutations, but also their impact on the global structure of the protein. An important aspect of the model is its refinement on experimental data including measured T(m) values for different proteins, which provides the possibility of predicting thermal stability even for previously unstudied GFP variants. In addition, the model accounts for the phenomenon of epistasis, as thermostability is determined by interactions between amino acid residues, and temBERTure automatically integrates the effects of combinatorial mutations rather than being limited to the additive effects of single substitutions.
+
+The TemBERTure model and data are available at: https://github.com/ibmm-unibe-ch/TemBERTure.
+
 
 ### Usage
 
