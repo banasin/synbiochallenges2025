@@ -296,16 +296,15 @@ optimizer.export_top_variants(
 
 ### Implementation
 
-To predict the thermostability of GFP mutants, we used temBERTure,  a deep learning package for protein thermostability prediction. It consists of three components: TemBERTureDB, a large-curated database of thermophilic and non-thermophilic sequences, TemBERTureCLS, a classifier, and TemBERTureTm, a regression model, which predicts, respectively, the thermal class (non-thermophilic or thermophilic) and melting temperature of a protein, based on its primary sequence. Both models are built upon the existing protBERT-BFD language model and fine-tuned through an adapter-based approach. 
+To predict the thermostability of GFP mutants, we used TemBERTure<sub>tm</sub>, a deep learning package for protein thermostability prediction. It consists of three components: TemBERTureDB, a large-curated database of thermophilic and non-thermophilic sequences, TemBERTure<sub>cls</sub>, a classifier, and TemBERTure<sub>tm</sub>, a regression model, which predicts, respectively, the thermal class (non-thermophilic or thermophilic) and melting temperature of a protein, based on its primary sequence. Both models are built upon the existing protBERT-BFD language model and fine-tuned through an adapter-based approach.
 
-TemBERTureCLS model architecture was based on the proBERT-BFD framework, with lightweight bottleneck adapter layers inserted between each transformer layer. The model takes a protein sequence as input and outputs a score indicating the classification score of the sequence being thermophilic or non-thermophilic.
+The TemBERTure<sub>cls</sub> model architecture was based on the protBERT-BFD framework, with lightweight bottleneck adapter layers inserted between each transformer layer. The model takes a protein sequence as input and outputs a score indicating the classification score of the sequence being thermophilic or non-thermophilic.
 
-TemBERTureTm is a sequence-based regression model designed to predict the protein melting temperature (Tm) directly from its amino acid sequence. This model has the same underlying architecture configuration and tokenization as TemBERTureCLS, with a regression head.
+TemBERTure<sub>tm</sub> is a sequence-based regression model designed to predict the protein melting temperature (T<sub>m</sub>) directly from its amino acid sequence. This model has the same underlying architecture configuration and tokenization as TemBERTure<sub>cls</sub>, with a regression head.
 
 Both models leverage the pre-trained protBERT-BFD architecture to minimize the number of trainable parameters, employing an adapter-based fine-tuning approach for optimization.
 
-The TemBERTure model and data are available at: https://github.com/ibmm-unibe-ch/TemBERTure.
-
+The TemBERTure model and data are available at: https://github.com/ibmm-unibe-ch/TemBERTure
 
 ### Usage
 
