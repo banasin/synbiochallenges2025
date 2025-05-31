@@ -308,4 +308,62 @@ The TemBERTure model and data are available at: https://github.com/ibmm-unibe-ch
 
 ### Usage
 
-...
+The TemBERTure thermal stability prediction pipeline can be executed for protein sequence analysis:
+
+```python
+import pandas as pd
+from temBERTure import TemBERTure
+import torch
+
+# Load data with protein sequences
+df = pd.read_csv("sequences.csv")  # Must contain 'sequence' column
+
+# Initialize models for classification and regression
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+# Classification model for thermal stability categories
+model_cls = TemBERTure(
+    adapter_path='./temBERTure_CLS/',
+    device=device,
+    batch_size=1,
+    task='classification'
+)
+
+# Regression models for melting temperature (3 replicas for ensemble)
+model_tm_r1 = TemBERTure(adapter_path='./temBERTure_TM/replica1/', device=device, batch_size=16, task='regression')
+model_tm_r2 = TemBERTure(adapter_path='./temBERTure_TM/replica2/', device=device, batch_size=16, task='regression')
+model_tm_r3 = TemBERTure(adapter_path='./temBERTure_TM/replica3/', device=device, batch_size=16, task='regression')
+
+# Process sequences
+sequences = df['sequence'].tolist()
+
+# Classification predictions (single sequence processing)
+cls_predictions = []
+cls_scores = []
+for seq in sequences:
+    result = model_cls.predict(seq)
+    cls_predictions.append(result[0][0])
+    cls_scores.append(float(result[1][0]))
+
+# Regression predictions (batch processing)
+tm_predictions = {'replica1': [], 'replica2': [], 'replica3': []}
+batch_size = 16
+
+for model_name, model in [('replica1', model_tm_r1), ('replica2', model_tm_r2), ('replica3', model_tm_r3)]:
+    for i in range(0, len(sequences), batch_size):
+        batch_seqs = sequences[i:i+batch_size]
+        predictions = model.predict(batch_seqs)
+        tm_predictions[model_name].extend(predictions)
+
+# Combine results with ensemble statistics
+df['cls_prediction'] = cls_predictions
+df['cls_score'] = cls_scores
+df['tm_replica1'] = tm_predictions['replica1']
+df['tm_replica2'] = tm_predictions['replica2'] 
+df['tm_replica3'] = tm_predictions['replica3']
+df['tm_mean'] = df[['tm_replica1', 'tm_replica2', 'tm_replica3']].mean(axis=1)
+df['tm_std'] = df[['tm_replica1', 'tm_replica2', 'tm_replica3']].std(axis=1)
+
+# Save results
+df.to_csv("thermal_stability_predictions.csv", index=False)
+```
