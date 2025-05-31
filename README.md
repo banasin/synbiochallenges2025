@@ -10,6 +10,14 @@ $$\sum_{k=1}^{6} \binom{L}{k} \cdot 19^k$$
 
 where $L = 238$ for avGFP, yielding approximately $10^{13}$ possible variants. Our methodology theorethically navigates efficiently this vast space by learning from limited experimental data and exploiting structural and evolutionary patterns encoded in protein language models.
 
+**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+
+**ЗДЕСЬ ДОЛЖЕН БЫТЬ АБЗАЦ ПРО ТЕРМОСТАБИЛЬНОСТЬ**
+
+**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+**!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
+
 For reproducibility, Conda package manager was utiziled. We strongly recommend to use it for evaluating purposes:
 
 ```bash
@@ -280,3 +288,13 @@ optimizer.export_top_variants(
     output_file="top_variants.fasta"
 )
 ```
+
+## Thermostability analysis
+
+### Implementation
+
+...
+
+### Usage
+
+...
